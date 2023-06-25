@@ -11,7 +11,7 @@ contract NFTPoolTest is Test {
     uint256 replayAmount = 0;
     bool didInitMint = false;
 
-    function setUp() public {
+    constructor() {
         contest = new Contest();
         contest.init();
         didInitMint = true;
