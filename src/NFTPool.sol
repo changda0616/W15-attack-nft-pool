@@ -71,7 +71,6 @@ contract Contest {
     EnumNft public nft;
     NftPool public nftPool;
     uint256 public tokenId;
-    address public challenger;
 
     constructor() {
         nft = new EnumNft("Bee NFT", "BeeNFT");
@@ -79,7 +78,16 @@ contract Contest {
     }
 
     function init() public {
+        require(!isContract(msg.sender), "Human only!!");
         tokenId = nft.mint(msg.sender);
+    }
+
+    function isContract(address account) public view returns (bool) {
+        uint size;
+        assembly {
+            size := extcodesize(account)
+        }
+        return size > 0;
     }
 
     function solve() public view returns (bool) {
